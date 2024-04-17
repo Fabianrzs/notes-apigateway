@@ -1,0 +1,6 @@
+@Reservar.Api.Public_HostAddress = http://localhost:5272
+
+GET {{Reservar.Api.Public_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
