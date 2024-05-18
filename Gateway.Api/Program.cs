@@ -28,6 +28,19 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.AllowAnyHeader()
+            .AllowAnyOrigin()
+            .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("authenticated", policy =>
@@ -41,18 +54,6 @@ builder.Services.AddRateLimiter(rateLimiterOptions =>
         options.Window = TimeSpan.FromSeconds(10);
         options.PermitLimit = 5;
     });
-});
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-        policy =>
-        {
-            policy.AllowAnyHeader()
-            .AllowAnyOrigin()
-            .AllowAnyMethod();
-        });
 });
 
 builder.Services
@@ -70,8 +71,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-app.UseCors(MyAllowSpecificOrigins);
+
 app.UseAuthorization();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseRateLimiter();
 
